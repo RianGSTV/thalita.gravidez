@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chá Revelação | A Grande Descoberta</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --font-primary: 'Montserrat', sans-serif;
+            --color-dark: #1a202c;
+            --color-light: #f7fafc;
+            --color-accent: #4fd1c5;
+            --color-boy-light: #5de6de;
+            --color-boy-dark: #2c7a7b;
+            --suspense-duration: 4s;
+        }
+        body {
+            margin: 0;
+            font-family: var(--font-primary);
+            background-color: var(--color-dark);
+            color: var(--color-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        .reveal-wrapper {
+            position: relative;
+            perspective: 1000px;
+        }
+        .reveal-container {
+            width: 90vw;
+            max-width: 500px;
+            height: 350px;
+            position: relative;
+        }
+        .background-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--color-boy-light), var(--color-boy-dark));
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .prompt-section,
+        .suspense-section,
+        .result-section {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .prompt-section {
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .suspense-section, .result-section {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .prompt-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin: 0;
+        }
+        .prompt-subtitle {
+            font-size: 1rem;
+            margin-bottom: 40px;
+            opacity: 0.8;
+        }
+        .reveal-btn {
+            background-color: var(--color-accent);
+            color: var(--color-dark);
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(79, 209, 197, 0.4);
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-primary);
+        }
+        .reveal-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(79, 209, 197, 0.6);
+        }
+        .reveal-wrapper.revealed .prompt-section {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .reveal-wrapper.revealed .suspense-section {
+            pointer-events: auto;
+            animation: suspense-sequence var(--suspense-duration) ease-in-out forwards;
+        }
+        .reveal-wrapper.revealed .result-section {
+            pointer-events: auto;
+            animation: result-sequence 1s ease-in-out var(--suspense-duration) forwards;
+        }
+        .reveal-wrapper.revealed .background-layer {
+            opacity: 1;
+            transition-delay: calc(var(--suspense-duration) - 1s);
+        }
+        .suspense-section p {
+            font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+        }
+        .heartbeat {
+            width: 80px; height: 80px; background-color: var(--color-accent);
+            position: relative; transform: rotate(45deg);
+            animation: pulse 0.8s infinite; margin-bottom: 20px;
+        }
+        .heartbeat::before, .heartbeat::after {
+            content: ''; position: absolute; width: 80px; height: 80px;
+            background-color: var(--color-accent); border-radius: 50%;
+        }
+        .heartbeat::before { top: -40px; left: 0; }
+        .heartbeat::after { top: 0; left: -40px; }
+        @keyframes pulse {
+            50% { transform: rotate(45deg) scale(1.15); }
+        }
+        @keyframes suspense-sequence {
+            0% { opacity: 0; }
+            10%, 90% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        @keyframes result-sequence {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .result-title {
+            font-size: 4rem; font-weight: 900; margin: 0;
+            color: var(--color-light); text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .result-subtitle { font-size: 1.1rem; opacity: 0.9; }
+        .padrinho-box {
+            margin-top: 30px; background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px; border-radius: 10px;
+            font-size: 0.9rem; font-weight: 700;
+        }
+        .confetti-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; }
+        .confetti-container::before {
+            content: ''; position: absolute; width: 10px; height: 20px;
+            background: #f00; top: -50px;
+            animation: confetti-fall 5s linear infinite forwards;
+            box-shadow: 
+                10vw 5vh 0 5px #ff0, 25vw -10vh 0 5px #0f0, 40vw 20vh 0 5px #0ff, 
+                55vw 15vh 0 5px #f0f, 70vw -5vh 0 5px #ff0, 85vw 30vh 0 5px #0f0,
+                5vw 50vh 0 5px #0ff, 20vw 60vh 0 5px #f0f, 35vw 70vh 0 5px #ff0, 
+                50vw 80vh 0 5px #0f0, 65vw 90vh 0 5px #0ff, 80vw 45vh 0 5px #f0f;
+        }
+        @keyframes confetti-fall {
+            from { transform: translateY(0) rotateZ(0); }
+            to { transform: translateY(110vh) rotateZ(360deg); }
+        }
+        .reveal-wrapper.revealed .confetti-container::before {
+             animation-delay: var(--suspense-duration);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reveal-wrapper" id="revealWrapper">
+        <div class="background-layer"></div>
+        <div class="reveal-container">
+            <div class="prompt-section">
+                <h1 class="prompt-title">Benino ou Benina?</h1>
+                <p class="prompt-subtitle">O momento da verdade está a um clique de distância.</p>
+                <button class="reveal-btn" id="revealBtn">Revelar o Segredo</button>
+            </div>
+            <div class="suspense-section">
+                <div class="heartbeat"></div>
+                <p>Verificando...</p>
+            </div>
+            <div class="result-section">
+                <div class="confetti-container"></div>
+                <h2 class="result-title">É um Menino!</h2>
+                <p class="result-subtitle">Prepare-se para um mundo de aventuras em azul!</p>
+                <div class="padrinho-box">
+                    <strong>Padrinho:</strong> Rian Gonçalves
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const revealBtn = document.getElementById('revealBtn');
+        const revealWrapper = document.getElementById('revealWrapper');
+        revealBtn.addEventListener('click', () => {
+            revealWrapper.classList.add('revealed');
+        });
+    </script>
+
+</body>
+</html>
